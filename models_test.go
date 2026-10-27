@@ -31,6 +31,20 @@ func Test_volcDomainRecordWithZone(t *testing.T) {
 			},
 		},
 		{
+			// libdns passes relative names; ACME DNS-01 records have two or more labels
+			memo: "multi-label relative record.Name with zone",
+			record: libdns.RR{
+				Name: "_acme-challenge.sub",
+			},
+			zone: "mydomain.com.",
+			zid:  12345,
+			result: volcDomainRecord{
+				Host:       "_acme-challenge.sub",
+				DomainName: "mydomain.com",
+				ZID:        12345,
+			},
+		},
+		{
 			memo: "record.Name with zone",
 			record: libdns.RR{
 				Name: "sub.mydomain.com",

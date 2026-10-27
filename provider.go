@@ -35,8 +35,9 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	}
 
 	for _, rec := range recs {
-		// zone parameter is not used, volcRecord will automatically extract root domain from record name
-		vr := volcRecord(rec, "", zid)
+		// Pass the zone so relative names (e.g. "_acme-challenge.sub") map to the right host.
+		// When zone is empty, volcRecord still falls back to extracting the root domain from the record name.
+		vr := volcRecord(rec, zone, zid)
 		rid, err := p.addDomainRecord(ctx, vr)
 		if err != nil {
 			errs.JoinRecord(rec, err)
